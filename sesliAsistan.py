@@ -35,6 +35,57 @@ class SesliAsistan:
             self.seslendirme("size de merhabalar")
         elif(gelen_Ses in "nasılsın"):
             self.seslendirme("iyiyim sizler nasılsınız")
+        elif(gelen_Ses in "müzik aç" or gelen_Ses in "video aç"):
+
+            try:
+                self.seslendirme("ne açmamı istersiniz")
+                cevap=self.mikrofon()
+
+                url="https://www.youtube.com/results?search_query="+cevap
+                tarayici=webdriver.Chrome()
+                tarayici.get(url)
+
+                ilk_video=tarayici.find_element(By.XPATH,"//*[@id='video-title']/yt-formatted-string").click()
+
+                time.sleep(5)
+
+                self.seslendirme("istediğiniz içerik bu mu ")
+                gelen_komut=self.mikrofon()
+                if(gelen_komut in "Hayır"):
+                    sayac=2
+                    tarayici.back()
+                    while(sayac<5):
+                        diger_videolar=tarayici.find_element(By.XPATH,"//*[@id='contents']/ytd-video-renderer[{}]".format(sayac)).click()
+                        time.sleep(5)
+                        self.seslendirme("istediğiniz içerik bu mu")
+                        komut=self.mikrofon()
+                        if(komut in "Evet"):
+                            self.seslendirme("keyifli vakit geçirmeler...")
+                            break
+                        else:
+                            self.seslendirme("o zaman diğer videolara bakalım")
+                            tarayici.back()
+                            sayac+=1
+                else:
+                    self.seslendirme("keyifli vakit geçirmeler...")
+
+            except:
+                self.seslendirme("bir hata meydana geldi.lütfen daha sonra tekrar deneyiniz")
+
+        elif(gelen_Ses in "google aç" or gelen_Ses in "arama yap"):
+            self.seslendirme("ne aramamı istersiniz")
+            cevap=self.mikrofon()
+
+            url="https://www.google.com/search?q="+cevap
+            self.seslendirme("{} ile ilgili bulduğum içerikler bunlar".format(cevap))
+            tarayici=webdriver.Chrome()
+            tarayici.get(url)
+
+            site=tarayici.find_element(By.XPATH,"//*[@id='rso']/div[1]/div/div/div/div/div/div/div[1]/a/h3").click()
+
+            time.sleep(5)
+            tarayici.quit()
+
 
 
     def uyanma_fonksiyonu(self,gelen_Ses):
