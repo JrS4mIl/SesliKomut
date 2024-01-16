@@ -246,6 +246,12 @@ class SesliAsistan:
                 cv2.imshow("Deneme Resim 1",resim)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
+        elif(gelen_Ses in 'Oyun aç'):
+            self.seslendirme('Hangi oyunu istersiniz')
+            cevap=self.mikrofon().lower()
+            if cevap in 'valorant':
+                self.seslendirme('Valo Aciliyor...')
+                os.startfile("C:/Riot Games/Riot Client/RiotClientServices.exe")
 
 
     def uyanma_fonksiyonu(self,gelen_Ses):
