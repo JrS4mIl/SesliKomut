@@ -7,7 +7,8 @@ import pyaudio
 import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
+import  requests
+from bs4 import  BeautifulSoup
 r=sr.Recognizer()
 
 class SesliAsistan:
@@ -85,6 +86,36 @@ class SesliAsistan:
 
             time.sleep(5)
             tarayici.quit()
+        elif(gelen_Ses in 'hava durum'):
+            self.seslendirme('Hangi sehrin hava durumunu istersiniz')
+            cevap=self.mikrofon()
+            url = f'https://havadurumu15gunluk.xyz/havadurumu/948/{cevap}-hava-durumu-15-gunluk.html'
+            response = requests.get(url)
+            if response.status_code == 200:
+                print('Islem Basarili baba')
+                soup = BeautifulSoup(response.text, 'html.parser')
+                havaDurum = soup.find_all('tr')[1].text.strip()
+                ##print(havaDurum)
+                havaDurum = havaDurum.replace('Saatlik', "")
+                print(havaDurum)
+                gunduz_sicaklik = havaDurum[-6:-4]
+                gece = havaDurum[-3:-1]
+                print("Gece Sikcalik:" + gece)
+                print("Gunduz Sicaklik:" + gunduz_sicaklik)
+                havaDurum = havaDurum[6:-6].strip()
+
+                gunler = ["Sal", "Car", "Per", "Cum", "Cmt", 'Pzr', 'Pzt']
+                for i in gunler:
+                    if i in havaDurum:
+                        havaDurum = havaDurum.replace(i, "")
+                print(havaDurum)
+
+
+
+
+            else:
+                print('hata')
+
 
 
 
